@@ -94,6 +94,11 @@ class FashionAI(Dataset):
             ms = np.load(ms_file)
             self.mean = ms[0]
             self.std = ms[1]
+            if self.transform is None:
+                self.transform = transforms.Compose([
+                    transforms.ToTensor(),
+                    transforms.Normalize(self.mean, self.std)
+                ])
         else:
             self.reset = True
 
@@ -129,6 +134,12 @@ class FashionAI(Dataset):
             rdata = self.train_data.reshape((count * self.width * self.height, self.depth))
             self.mean = tuple(np.mean(rdata, 0))
             self.std = tuple(np.std(rdata, 0))
+
+            if self.transform is None:
+                self.transform = transforms.Compose([
+                    transforms.ToTensor(),
+                    transforms.Normalize(self.mean, self.std)
+                ])
 
             np.save(data_file, self.train_data)
             np.save(label_file, self.train_labels)
@@ -200,12 +211,6 @@ class FashionAI(Dataset):
             np.save(data_file, self.eval_data)
 
             #print(self.test_data.shape)
-
-        if self.transform is None:
-            self.transform = transforms.Compose([
-                transforms.ToTensor(),
-                transforms.Normalize(self.mean, self.std)
-            ])
 
     def __getitem__(self, index):
         if self.data_type == 'train':
