@@ -150,7 +150,7 @@ class ResNet(nn.Module):
         x = x.view(x.size(0), -1)
         x = self.fc(x)
 
-        return nn.functional.log_softmax(x, dim=0)
+        return nn.functional.log_softmax(x, dim=1)
 
 
 def resnet18(pretrained=False, **kwargs):
