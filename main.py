@@ -17,11 +17,11 @@ parser.add_argument('--model', type=str, default='resnet34', metavar='M',
 parser.add_argument('--attribute', type=str, default='coat_length_labels', metavar='A',
                     help='fashion attribute (default: coat_length_labels)')
 parser.add_argument('--batch-size', type=int, default=128, metavar='N',
-                    help='input batch size for training (default: 64)')
+                    help='input batch size for training (default: 128)')
 parser.add_argument('--test-batch-size', type=int, default=10, metavar='N',
-                    help='input batch size for testing (default: 1000)')
+                    help='input batch size for testing (default: 10)')
 parser.add_argument('--epochs', type=int, default=50, metavar='N',
-                    help='number of epochs to train (default: 10)')
+                    help='number of epochs to train (default: 50)')
 parser.add_argument('--lr', type=float, default=0.01, metavar='LR',
                     help='learning rate (default: 0.01)')
 parser.add_argument('--momentum', type=float, default=0.5, metavar='M',
