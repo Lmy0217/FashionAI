@@ -33,6 +33,7 @@ class FashionAI(Dataset):
     test_data_file = '_test_data.npy'
     test_label_file = '_test_label.npy'
     rank_data_file = '_rank_data.npy'
+    rank_index_file = '_rank_index.npy'
     ms_file = '_ms.npy'
 
     AttrKey = {
@@ -184,12 +185,16 @@ class FashionAI(Dataset):
         elif self.data_type == 'eval':
             data_file = os.path.join(self.root, self.base_folder, self.rank_folder, self.data_folder,
                                      self.attribute + self.rank_data_file)
+            index_file = os.path.join(self.root, self.base_folder, self.rank_folder, self.data_folder,
+                                     self.attribute + self.rank_index_file)
 
-            if not self.reset and os.path.exists(data_file):
+            if not self.reset and os.path.exists(data_file) and os.path.exists(index_file):
                 self.eval_data = np.load(data_file)
+                self.eval_index = np.load(index_file)
                 return
 
             self.eval_data = []
+            self.eval_index = []
             label_file = os.path.join(self.root, self.base_folder, self.rank_folder, self.rank_label_folder,
                                       self.rank_label)
             count = 0
@@ -199,6 +204,7 @@ class FashionAI(Dataset):
                     if row[1] == self.attribute:
                         image_file = os.path.join(self.root, self.base_folder, self.rank_folder, row[0])
                         self.eval_data.append(np.uint8(np.array(self.loader(image_file).resize((self.width, self.height))).tolist()))
+                        self.eval_index.append(row[0])
                         count += 1
                         #if count == 2:
                             #break
@@ -209,6 +215,7 @@ class FashionAI(Dataset):
             self.eval_data = self.eval_data.transpose((0, 2, 3, 1))
 
             np.save(data_file, self.eval_data)
+            np.save(index_file, self.eval_index)
 
             #print(self.test_data.shape)
 
@@ -218,7 +225,7 @@ class FashionAI(Dataset):
         elif self.data_type == 'test':
             img, target = self.test_data[index], self.test_labels[index]
         elif self.data_type == 'eval':
-            img = self.eval_data[index]
+            img, target = self.eval_data[index], self.eval_index[index]
 
         img = Image.fromarray(img)
 

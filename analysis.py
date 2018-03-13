@@ -6,7 +6,7 @@ parser = argparse.ArgumentParser(description='FashionAI Analysis')
 parser.add_argument('--model', type=str, default='resnet34', metavar='M', help='model name')
 args = parser.parse_args()
 
-log_file = 'main.log'
+log_file = './save/pant_length_labels/resnet34_50.log'
 
 with open(log_file, 'r') as f:
     flogs = f.readlines()
