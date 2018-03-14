@@ -81,7 +81,7 @@ class FashionAI(Dataset):
 
         shuffle_file = os.path.join(self.root, self.base_folder, self.train_folder, self.label_folder,
                                     self.attribute + self.shuffle_file)
-        if not os.path.exists(shuffle_file) or self.reset:
+        if not os.path.exists(shuffle_file) or (self.data_type == 'train' and self.reset):
             shuffle = list(range(len(csvdata)))
             np.random.shuffle(shuffle)
             np.save(shuffle_file, shuffle)
