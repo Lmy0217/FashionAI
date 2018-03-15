@@ -14,7 +14,7 @@ This repo is code of [FashionAI Global Challenge—Attributes Recognition of App
 ## Prerequisites
 - Download this repo
   ```bash
-  https://github.com/Lmy0217/FashionAI.git
+  git clone https://github.com/Lmy0217/FashionAI.git
   cd FashionAI
   ```
 
