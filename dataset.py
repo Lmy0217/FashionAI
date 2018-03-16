@@ -58,8 +58,8 @@ class FashionAI(Dataset):
         self.split = split
         self.reset = reset
         self.depth = 3
-        self.width = 227
-        self.height = 227
+        self.width = 224
+        self.height = 224
 
         if self.attribute not in self.AttrKey.keys():
             raise RuntimeError('Attribute not found.')
