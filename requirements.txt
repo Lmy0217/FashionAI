@@ -27,7 +27,6 @@ PyQt5==5.10.1
 pytesseract==0.2.0
 python-dateutil==2.6.1
 pytz==2018.3
-pywin32==223
 queuelib==1.5.0
 requests==2.18.4
 Requires==0.0.3
