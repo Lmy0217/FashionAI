@@ -284,7 +284,7 @@ class FashionAI(Dataset):
             print('Downloading ' + url)
             filename = url.rpartition('?')[0].rpartition('/')[2]
             file_path = os.path.join(self.root, self.base_folder, filename)
-            urllib.urlretrieve(url, file_path, callbackfunc)
+            urllib.request.urlretrieve(url, file_path, callbackfunc)
             with tarfile.open(file_path) as tar_f:
                 tar_f.extractall()
 
