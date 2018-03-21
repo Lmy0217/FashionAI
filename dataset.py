@@ -1,7 +1,7 @@
 from torch.utils.data import Dataset
 from torchvision import transforms
 from PIL import Image
-from six.moves import urllib
+import urllib
 import tarfile
 import os
 import os.path
