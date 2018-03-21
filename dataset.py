@@ -1,8 +1,11 @@
 from torch.utils.data import Dataset
 from torchvision import transforms
 from PIL import Image
+from six.moves import urllib
+import tarfile
 import os
 import os.path
+import errno
 import numpy as np
 import csv
 import math
@@ -13,6 +16,12 @@ def default_loader(path):
 
 
 class FashionAI(Dataset):
+
+    urls = [
+        'http://aliyuntianchiresult.cn-hangzhou.oss.aliyun-inc.com/file/race/documents/231649/fashionAI_attributes_test_a_20180222.tar?Expires=1521704427&OSSAccessKeyId=2zep9f8tkzg6ennfl26ciifi&Signature=ASqsT9nTwQag9bwyt0LzkyNQcXo%3D&response-content-disposition=attachment%3B%20',
+        'http://aliyuntianchiresult.cn-hangzhou.oss.aliyun-inc.com/file/race/documents/231649/fashionAI_attributes_train_20180222.tar?Expires=1521705583&OSSAccessKeyId=2zep9f8tkzg6ennfl26ciifi&Signature=WOmSxsvHjz5WNh7KQmq9aSw8Ghw%3D&response-content-disposition=attachment%3B%20',
+        'http://aliyuntianchiresult.cn-hangzhou.oss.aliyun-inc.com/file/race/documents/231649/warm_up_train_20180201.tar?Expires=1521705626&OSSAccessKeyId=2zep9f8tkzg6ennfl26ciifi&Signature=CRKekykxgyHq8s6NMGVrNeqX5BM%3D&response-content-disposition=attachment%3B%20',
+    ]
 
     base_folder = 'datasets'
 
@@ -68,6 +77,8 @@ class FashionAI(Dataset):
 
         if self.split <= 0 or self.split >= 1:
             self.split = 0.8
+
+        self.download()
 
         label_file = os.path.join(self.root, self.base_folder, self.train_folder, self.label_folder,
                                   self.train_label)
@@ -244,6 +255,33 @@ class FashionAI(Dataset):
             return len(self.test_data)
         elif self.data_type == 'eval':
             return len(self.eval_data)
+
+    def _check_exists(self):
+        return os.path.exists(os.path.join(self.root, self.base_folder, self.train_folder)) and \
+               os.path.exists(os.path.join(self.root, self.base_folder, self.warm_folder)) and \
+               os.path.exists(os.path.join(self.root, self.base_folder, self.rank_folder))
+
+    def download(self):
+        if self._check_exists():
+            return
+
+        try:
+            os.makedirs(os.path.join(self.root, self.base_folder))
+        except OSError as e:
+            if e.errno == errno.EEXIST:
+                pass
+            else:
+                raise
+
+        for url in self.urls:
+            print('Downloading ' + url)
+            data = urllib.request.urlopen(url)
+            filename = url.rpartition('?')[0].rpartition('/')[2]
+            file_path = os.path.join(self.root, self.base_folder, filename)
+            with open(file_path, 'wb') as f:
+                f.write(data.read())
+            with tarfile.open(file_path) as tar_f:
+                tar_f.extractall()
 
 
 if __name__ == "__main__":
