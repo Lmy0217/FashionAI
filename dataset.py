@@ -273,13 +273,18 @@ class FashionAI(Dataset):
             else:
                 raise
 
+        def callbackfunc(blocknum, blocksize, totalsize):
+            percent = 100.0 * blocknum * blocksize / totalsize
+            if percent > 100:
+                percent = 100
+            print
+            "%.2f%%" % percent
+
         for url in self.urls:
             print('Downloading ' + url)
-            data = urllib.request.urlopen(url)
             filename = url.rpartition('?')[0].rpartition('/')[2]
             file_path = os.path.join(self.root, self.base_folder, filename)
-            with open(file_path, 'wb') as f:
-                f.write(data.read())
+            urllib.urlretrieve(url, file_path, callbackfunc)
             with tarfile.open(file_path) as tar_f:
                 tar_f.extractall()
 
