@@ -161,6 +161,7 @@ class FashionAI(Dataset):
                 self.train_data.append(np.uint8(np.array(self.loader(image_file).resize((self.width, self.height))).tolist()))
                 self.train_labels.append(csvdata[row][2].find('y'))
                 count += 1
+                print(count)
                 #if count == 80:
                     #break
 
@@ -206,6 +207,7 @@ class FashionAI(Dataset):
                 self.test_data.append(np.uint8(np.array(self.loader(image_file).resize((self.width, self.height))).tolist()))
                 self.test_labels.append(csvdata[row][2].find('y'))
                 count += 1
+                print(count)
                 #if count == 20:
                     #break
 
@@ -244,6 +246,7 @@ class FashionAI(Dataset):
                         self.eval_data.append(np.uint8(np.array(self.loader(image_file).resize((self.width, self.height))).tolist()))
                         self.eval_index.append(row[0])
                         count += 1
+                        print(count)
                         #if count == 2:
                             #break
                 f.close()
