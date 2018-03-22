@@ -337,11 +337,12 @@ class FashionAI(Dataset):
 
         for url, hash in zip(self.urls, self.hashs):
             filename = url.rpartition('?')[0].rpartition('/')[2]
-            file_path = os.path.join(self.root, self.base_folder, filename)
+            file_folder = os.path.join(self.root, self.base_folder)
+            file_path = os.path.join(file_folder, filename)
             sys.stderr.write('Downloading: "{}" to {}\n'.format(url, file_path))
-            self._download_url_to_file(url, file_path, hash)
+            self._download_url_to_file(url, file_folder, hash)
             with tarfile.open(file_path) as tar_f:
-                tar_f.extractall(path=self.base_folder)
+                tar_f.extractall(path=file_folder)
 
 
 if tqdm is None:
