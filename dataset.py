@@ -47,7 +47,7 @@ class FashionAI(Dataset):
     hashs = [
         '765095dcb83edb0af137e8295244c044137b47feddc3b552fd03d1165c57f495',
         '20ddae0deb5544b6ccdda7df46fd2e0c7756bba2e7ed4c9a23c2c133ede138c6',
-        '20ddae0deb5544b6ccdda7df46fd2e0c7756bba2e7ed4c9a23c2c133ede138c6',
+        '6c6957250e11cc146634eef87cd044fa9979b2d28355c24a059c9ce05b85a7cb',
     ]
 
     base_folder = 'datasets'
