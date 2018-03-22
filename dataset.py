@@ -83,8 +83,8 @@ class FashionAI(Dataset):
         'sleeve_length_labels':9,
     }
 
-    def __init__(self, root, attribute, split=0.8, data_type='train', reset=False, transform=None,
-                 target_transform=None, loader=default_loader):
+    def __init__(self, root, attribute, split=0.8, data_type='train', reset=False, ci=False,
+                 transform=None, target_transform=None, loader=default_loader):
         self.root = os.path.expanduser(root)
         self.attribute = attribute
         self.transform = transform
@@ -93,6 +93,7 @@ class FashionAI(Dataset):
         self.loader = loader
         self.split = split
         self.reset = reset
+        self.ci = ci
         self.depth = 3
         self.width = 224
         self.height = 224
@@ -162,8 +163,8 @@ class FashionAI(Dataset):
                 self.train_labels.append(csvdata[row][2].find('y'))
                 count += 1
                 print(count)
-                #if count == 80:
-                    #break
+                if self.ci and count == 80:
+                    break
 
             self.train_data = np.concatenate(self.train_data)
             self.train_data = self.train_data.reshape((count, self.depth, self.width, self.height))
@@ -208,8 +209,8 @@ class FashionAI(Dataset):
                 self.test_labels.append(csvdata[row][2].find('y'))
                 count += 1
                 print(count)
-                #if count == 20:
-                    #break
+                if self.ci and count == 20:
+                    break
 
             self.test_data = np.concatenate(self.test_data)
             self.test_data = self.test_data.reshape((count, self.depth, self.width, self.height))
@@ -247,8 +248,8 @@ class FashionAI(Dataset):
                         self.eval_index.append(row[0])
                         count += 1
                         print(count)
-                        #if count == 2:
-                            #break
+                        if self.ci and count == 2:
+                            break
                 f.close()
 
             self.eval_data = np.concatenate(self.eval_data)

@@ -28,6 +28,8 @@ parser.add_argument('--momentum', type=float, default=0, metavar='M',
                     help='SGD momentum (default: 0)')
 parser.add_argument('--no-cuda', action='store_true', default=False,
                     help='disables CUDA training')
+parser.add_argument('--ci', action='store_true', default=False,
+                    help='running CI')
 parser.add_argument('--seed', type=int, default=1, metavar='S',
                     help='random seed (default: 1)')
 parser.add_argument('--log-interval', type=int, default=10, metavar='N',
@@ -40,8 +42,8 @@ if args.cuda:
     torch.cuda.manual_seed(args.seed)
 
 kwargs = {'num_workers': 1, 'pin_memory': True} if args.cuda else {}
-trainset = FashionAI('./', attribute=args.attribute, split=0.8, data_type='train', reset=False)
-testset = FashionAI('./', attribute=args.attribute, split=0.8, data_type='test', reset=trainset.reset)
+trainset = FashionAI('./', attribute=args.attribute, split=0.8, ci=args.ci, data_type='train', reset=False)
+testset = FashionAI('./', attribute=args.attribute, split=0.8, ci=args.ci, data_type='test', reset=trainset.reset)
 train_loader = torch.utils.data.DataLoader(trainset, batch_size=args.batch_size, shuffle=True, **kwargs)
 test_loader = torch.utils.data.DataLoader(testset, batch_size=args.test_batch_size, shuffle=True, **kwargs)
 
