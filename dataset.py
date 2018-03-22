@@ -340,7 +340,7 @@ class FashionAI(Dataset):
             file_folder = os.path.join(self.root, self.base_folder)
             file_path = os.path.join(file_folder, filename)
             sys.stderr.write('Downloading: "{}" to {}\n'.format(url, file_path))
-            self._download_url_to_file(url, file_folder, hash)
+            self._download_url_to_file(url, file_path, hash)
             with tarfile.open(file_path) as tar_f:
                 tar_f.extractall(path=file_folder)
 
