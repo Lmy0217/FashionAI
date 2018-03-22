@@ -1,14 +1,35 @@
 from torch.utils.data import Dataset
 from torchvision import transforms
 from PIL import Image
-import urllib
 import tarfile
+import hashlib
+import re
 import os
 import os.path
+import sys
+import shutil
+import tempfile
 import errno
 import numpy as np
 import csv
 import math
+
+try:
+    from requests.utils import urlparse
+    import requests.get as urlopen
+    requests_available = True
+except ImportError:
+    requests_available = False
+    if sys.version_info[0] == 2:
+        from urlparse import urlparse
+        from urllib2 import urlopen
+    else:
+        from urllib.request import urlopen
+        from urllib.parse import urlparse
+try:
+    from tqdm import tqdm
+except ImportError:
+    tqdm = None
 
 
 def default_loader(path):
@@ -21,6 +42,12 @@ class FashionAI(Dataset):
         'http://aliyuntianchiresult.cn-hangzhou.oss.aliyun-inc.com/file/race/documents/231649/fashionAI_attributes_test_a_20180222.tar?Expires=1521704427&OSSAccessKeyId=2zep9f8tkzg6ennfl26ciifi&Signature=ASqsT9nTwQag9bwyt0LzkyNQcXo%3D&response-content-disposition=attachment%3B%20',
         'http://aliyuntianchiresult.cn-hangzhou.oss.aliyun-inc.com/file/race/documents/231649/fashionAI_attributes_train_20180222.tar?Expires=1521705583&OSSAccessKeyId=2zep9f8tkzg6ennfl26ciifi&Signature=WOmSxsvHjz5WNh7KQmq9aSw8Ghw%3D&response-content-disposition=attachment%3B%20',
         'http://aliyuntianchiresult.cn-hangzhou.oss.aliyun-inc.com/file/race/documents/231649/warm_up_train_20180201.tar?Expires=1521705626&OSSAccessKeyId=2zep9f8tkzg6ennfl26ciifi&Signature=CRKekykxgyHq8s6NMGVrNeqX5BM%3D&response-content-disposition=attachment%3B%20',
+    ]
+
+    hashs = [
+        '765095dcb83edb0af137e8295244c044137b47feddc3b552fd03d1165c57f495',
+        '20ddae0deb5544b6ccdda7df46fd2e0c7756bba2e7ed4c9a23c2c133ede138c6',
+        '20ddae0deb5544b6ccdda7df46fd2e0c7756bba2e7ed4c9a23c2c133ede138c6',
     ]
 
     base_folder = 'datasets'
@@ -261,6 +288,41 @@ class FashionAI(Dataset):
                os.path.exists(os.path.join(self.root, self.base_folder, self.warm_folder)) and \
                os.path.exists(os.path.join(self.root, self.base_folder, self.rank_folder))
 
+    def _download_url_to_file(self, url, dst, hash_prefix, progress=True):
+        u = urlopen(url)
+        if requests_available:
+            file_size = int(u.headers["Content-Length"])
+            u = u.raw
+        else:
+            meta = u.info()
+            if hasattr(meta, 'getheaders'):
+                file_size = int(meta.getheaders("Content-Length")[0])
+            else:
+                file_size = int(meta.get_all("Content-Length")[0])
+
+        f = tempfile.NamedTemporaryFile(delete=False)
+        try:
+            sha256 = hashlib.sha256()
+            with tqdm(total=file_size, disable=not progress) as pbar:
+                while True:
+                    buffer = u.read(8192)
+                    if len(buffer) == 0:
+                        break
+                    f.write(buffer)
+                    sha256.update(buffer)
+                    pbar.update(len(buffer))
+
+            f.close()
+            digest = sha256.hexdigest()
+            if digest[:len(hash_prefix)] != hash_prefix:
+                raise RuntimeError('invalid hash value (expected "{}", got "{}")'
+                                   .format(hash_prefix, digest))
+            shutil.move(f.name, dst)
+        finally:
+            f.close()
+            if os.path.exists(f.name):
+                os.remove(f.name)
+
     def download(self):
         if self._check_exists():
             return
@@ -273,21 +335,38 @@ class FashionAI(Dataset):
             else:
                 raise
 
-        def callbackfunc(blocknum, blocksize, totalsize):
-            percent = 100.0 * blocknum * blocksize / totalsize
-            if percent > 100:
-                percent = 100
-            print
-            "%.2f%%" % percent
-
-        for url in self.urls:
-            print('Downloading ' + url)
+        for url, hash in zip(self.urls, self.hashs):
             filename = url.rpartition('?')[0].rpartition('/')[2]
             file_path = os.path.join(self.root, self.base_folder, filename)
-            urllib.request.urlretrieve(url, file_path, callbackfunc)
+            sys.stderr.write('Downloading: "{}" to {}\n'.format(url, file_path))
+            self._download_url_to_file(url, file_path, hash)
             with tarfile.open(file_path) as tar_f:
-                tar_f.extractall()
+                tar_f.extractall(path=self.base_folder)
 
+
+if tqdm is None:
+    class tqdm(object):
+
+        def __init__(self, total, disable=False):
+            self.total = total
+            self.disable = disable
+            self.n = 0
+
+        def update(self, n):
+            if self.disable:
+                return
+
+            self.n += n
+            sys.stderr.write("\r{0:.1f}%".format(100 * self.n / float(self.total)))
+            sys.stderr.flush()
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc_val, exc_tb):
+            if self.disable:
+                return
+            sys.stderr.write('\n')
 
 if __name__ == "__main__":
     FashionAI('./', 'coat_length_labels')

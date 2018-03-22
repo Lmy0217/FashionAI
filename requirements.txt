@@ -35,6 +35,7 @@ Scrapy==1.5.0
 service-identity==17.0.0
 sip==4.19.8
 six==1.11.0
+tqdm==4.19.8
 Twisted==17.9.0
 urllib3==1.22
 w3lib==1.19.0
