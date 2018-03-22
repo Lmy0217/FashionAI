@@ -336,7 +336,7 @@ class FashionAI(Dataset):
                 raise
 
         for url, hash in zip(self.urls, self.hashs):
-            filename = url.rpartition('?')[0].rpartition('/')[2]
+            filename = url.rpartition('/')[2]
             file_folder = os.path.join(self.root, self.base_folder)
             file_path = os.path.join(file_folder, filename)
             sys.stderr.write('Downloading: "{}" to {}\n'.format(url, file_path))
