@@ -39,9 +39,9 @@ def default_loader(path):
 class FashionAI(Dataset):
 
     urls = [
-        'http://aliyuntianchiresult.cn-hangzhou.oss.aliyun-inc.com/file/race/documents/231649/fashionAI_attributes_test_a_20180222.tar?Expires=1521704427&OSSAccessKeyId=2zep9f8tkzg6ennfl26ciifi&Signature=ASqsT9nTwQag9bwyt0LzkyNQcXo%3D&response-content-disposition=attachment%3B%20',
-        'http://aliyuntianchiresult.cn-hangzhou.oss.aliyun-inc.com/file/race/documents/231649/fashionAI_attributes_train_20180222.tar?Expires=1521705583&OSSAccessKeyId=2zep9f8tkzg6ennfl26ciifi&Signature=WOmSxsvHjz5WNh7KQmq9aSw8Ghw%3D&response-content-disposition=attachment%3B%20',
-        'http://aliyuntianchiresult.cn-hangzhou.oss.aliyun-inc.com/file/race/documents/231649/warm_up_train_20180201.tar?Expires=1521705626&OSSAccessKeyId=2zep9f8tkzg6ennfl26ciifi&Signature=CRKekykxgyHq8s6NMGVrNeqX5BM%3D&response-content-disposition=attachment%3B%20',
+        'https://en.myluo.cn/packages/fashionAI_attributes_test_a_20180222.tar',
+        'https://en.myluo.cn/packages/fashionAI_attributes_train_20180222.tar',
+        'https://en.myluo.cn/packages/warm_up_train_20180201.tar',
     ]
 
     hashs = [
