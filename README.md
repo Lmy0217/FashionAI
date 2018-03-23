@@ -1,6 +1,5 @@
 # FashionAI
-[![Travis](https://img.shields.io/travis/Lmy0217/FashionAI.svg?label=Travis+CI)](https://www.travis-ci.org/Lmy0217/FashionAI) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/Lmy0217/FashionAI/pulls)
-[![CircleCI](https://img.shields.io/circleci/project/github/Lmy0217/FashionAI.svg?label=CircleCI)](https://circleci.com/gh/Lmy0217/FashionAI)
+[![Travis](https://img.shields.io/travis/Lmy0217/FashionAI.svg?label=Travis+CI)](https://www.travis-ci.org/Lmy0217/FashionAI) [![CircleCI](https://img.shields.io/circleci/project/github/Lmy0217/FashionAI.svg?label=CircleCI)](https://circleci.com/gh/Lmy0217/FashionAI) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/Lmy0217/FashionAI/pulls)
 
 This repo is code of [FashionAI Global Challenge—Attributes Recognition of Apparel](https://tianchi.aliyun.com/competition/introduction.htm?spm=a2c22.11190735.991137.11.23446d83RhZFij&raceId=231649&_lang=zh_CN) based on PyTorch. **This repo only for learning.**
 
