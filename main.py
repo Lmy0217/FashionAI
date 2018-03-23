@@ -67,6 +67,9 @@ class Net(nn.Module):
         return F.log_softmax(x, dim=1)
 
 
+if args.ci:
+    args.model = 'ci'
+
 if args.model == 'resnet34':
     model = models.resnet34(FashionAI.AttrKey[args.attribute])
 else:
