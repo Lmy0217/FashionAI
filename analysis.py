@@ -3,12 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 parser = argparse.ArgumentParser(description='FashionAI Analysis')
-parser.add_argument('--model', type=str, default='resnet34', metavar='M', help='model name')
+parser.add_argument('--model', type=str, default='resnet34', metavar='M',
+                    help='model name')
+parser.add_argument('--log', type=str, default='main.log', metavar='L',
+                    help='log file')
 args = parser.parse_args()
 
-log_file = './save/pant_length_labels/resnet34_50.log'
-
-with open(log_file, 'r') as f:
+with open(args.log, 'r') as f:
     flogs = f.readlines()
 
 trainset = {

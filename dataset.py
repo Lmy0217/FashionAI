@@ -3,7 +3,6 @@ from torchvision import transforms
 from PIL import Image
 import tarfile
 import hashlib
-import re
 import os
 import os.path
 import sys
@@ -116,7 +115,6 @@ class FashionAI(Dataset):
             for row in reader:
                 if row[1] == self.attribute:
                     csvdata.append(row)
-            f.close()
 
         shuffle_file = os.path.join(self.root, self.base_folder, self.train_folder, self.label_folder,
                                     self.attribute + self.shuffle_file)
@@ -162,7 +160,6 @@ class FashionAI(Dataset):
                 self.train_data.append(np.uint8(np.array(self.loader(image_file).resize((self.width, self.height))).tolist()))
                 self.train_labels.append(csvdata[row][2].find('y'))
                 count += 1
-                print(count)
                 if self.ci and count == 80:
                     break
 
@@ -208,7 +205,6 @@ class FashionAI(Dataset):
                 self.test_data.append(np.uint8(np.array(self.loader(image_file).resize((self.width, self.height))).tolist()))
                 self.test_labels.append(csvdata[row][2].find('y'))
                 count += 1
-                print(count)
                 if self.ci and count == 20:
                     break
 
@@ -247,10 +243,8 @@ class FashionAI(Dataset):
                         self.eval_data.append(np.uint8(np.array(self.loader(image_file).resize((self.width, self.height))).tolist()))
                         self.eval_index.append(row[0])
                         count += 1
-                        print(count)
-                        if self.ci and count == 2:
+                        if self.ci and count == 20:
                             break
-                f.close()
 
             self.eval_data = np.concatenate(self.eval_data)
             self.eval_data = self.eval_data.reshape((count, self.depth, self.width, self.height))

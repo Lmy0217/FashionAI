@@ -16,3 +16,4 @@ install:
 
 script:
   - python3 -m main --no-cuda --ci
+  - python3 -m evaluate --no-cuda --ci

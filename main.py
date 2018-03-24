@@ -2,10 +2,9 @@ import argparse
 import os
 import os.path
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-import models
+import model as m
 from torch.autograd import Variable
 from dataset import FashionAI
 
@@ -47,49 +46,10 @@ testset = FashionAI('./', attribute=args.attribute, split=0.8, ci=args.ci, data_
 train_loader = torch.utils.data.DataLoader(trainset, batch_size=args.batch_size, shuffle=True, **kwargs)
 test_loader = torch.utils.data.DataLoader(testset, batch_size=args.test_batch_size, shuffle=True, **kwargs)
 
-
-class Net(nn.Module):
-    def __init__(self):
-        super(Net, self).__init__()
-        self.features = nn.Sequential(
-            nn.Conv2d(3, 10, kernel_size=11, stride=4, padding=2),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=3, stride=2),
-            nn.Conv2d(10, 16, kernel_size=5, padding=2),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=3, stride=2),
-            nn.Conv2d(16, 32, kernel_size=3, padding=1),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(32, 32, kernel_size=3, padding=1),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(32, 32, kernel_size=3, padding=1),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=3, stride=2),
-        )
-        self.classifier = nn.Sequential(
-            nn.Dropout(),
-            nn.Linear(32 * 6 * 6, 100),
-            nn.ReLU(inplace=True),
-            nn.Dropout(),
-            nn.Linear(100, 100),
-            nn.ReLU(inplace=True),
-            nn.Linear(100, FashionAI.AttrKey[args.attribute]),
-        )
-
-    def forward(self, x):
-        x = self.features(x)
-        x = x.view(x.size(0), 32 * 6 * 6)
-        x = self.classifier(x)
-        return F.log_softmax(x, dim=1)
-
-
 if args.ci:
     args.model = 'ci'
 
-if args.model == 'resnet34':
-    model = models.resnet34(FashionAI.AttrKey[args.attribute])
-else:
-    model = Net()
+model = m.create_model(args.model, FashionAI.AttrKey[args.attribute])
 
 save_folder = os.path.join(os.path.expanduser('.'), 'save', args.attribute, args.model)
 
@@ -113,8 +73,6 @@ def train(epoch):
         data, target = Variable(data), Variable(target)
         optimizer.zero_grad()
         output = model(data)
-        #print(output)
-        #print(target)
         loss = F.nll_loss(output, target)
         loss.backward()
         optimizer.step()

@@ -9,7 +9,7 @@ This repo is code of [FashionAI Global Challenge—Attributes Recognition of App
 - Memory cost would be around 20GB
 - Dependencies: 
   - [CUDA](https://developer.nvidia.com/cuda-toolkit) and [cuDNN](https://developer.nvidia.com/cudnn) with GPU
-  - [PyTorch](https://github.com/pytorch/pytorch) with packages ([torchvision](https://github.com/pytorch/vision)) installed by default, as well as some special packages such as [Numpy](https://github.com/numpy/numpy) and [matplotlib](https://matplotlib.org/)
+  - [PyTorch](https://github.com/pytorch/pytorch) with packages ([torchvision](https://github.com/pytorch/vision)) installed
 
 ## Prerequisites
 - Download this repo
@@ -18,9 +18,14 @@ This repo is code of [FashionAI Global Challenge—Attributes Recognition of App
   cd FashionAI
   ```
 
-- Download the [Attributes Recognition of Apparel](https://tianchi.aliyun.com/competition/information.htm?spm=5176.100067.5678.2.7b463a26RhDo2u&raceId=231649) dataset and extract the tar file in the folder `datasets` (now, this folder should contain three folder named 'base', 'web' and 'rank' respectively)
+- Install requirements
+  ```bash
+  pip3 install -r requirements.txt
+  ```
 
-## Training and Testing
+- (Unnecessary) Download the [Attributes Recognition of Apparel](https://tianchi.aliyun.com/competition/information.htm?spm=5176.100067.5678.2.7b463a26RhDo2u&raceId=231649) dataset and extract the tar file in the folder `datasets` (now, this folder should contain three folder named 'base', 'web' and 'rank' respectively)
+
+## Usage
 The training and testing scripts come with several options, which can be listed with the `--help` flag.
 ```bash
 python3 main.py --help

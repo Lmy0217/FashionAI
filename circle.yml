@@ -51,6 +51,7 @@ jobs:
           command: |
             . venv/bin/activate
             python3 -m main --no-cuda --ci
+            python3 -m evaluate --no-cuda --ci
 
       - store_artifacts:
           path: test-reports
