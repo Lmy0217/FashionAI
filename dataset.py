@@ -163,9 +163,7 @@ class FashionAI(Dataset):
                 if self.ci and count == 80:
                     break
 
-            self.train_data = np.concatenate(self.train_data)
-            self.train_data = self.train_data.reshape((count, self.depth, self.width, self.height))
-            self.train_data = self.train_data.transpose((0, 2, 3, 1))
+            self.train_data = np.array(self.train_data)
 
             #self.train_labels = np.eye(self.nb_classes, dtype=int)[np.array(self.train_labels).reshape(-1)]
 
@@ -208,9 +206,7 @@ class FashionAI(Dataset):
                 if self.ci and count == 20:
                     break
 
-            self.test_data = np.concatenate(self.test_data)
-            self.test_data = self.test_data.reshape((count, self.depth, self.width, self.height))
-            self.test_data = self.test_data.transpose((0, 2, 3, 1))
+            self.test_data = np.array(self.test_data)
 
             #self.test_labels = np.eye(self.nb_classes, dtype=int)[np.array(self.test_labels).reshape(-1)]
 
@@ -246,9 +242,7 @@ class FashionAI(Dataset):
                         if self.ci and count == 20:
                             break
 
-            self.eval_data = np.concatenate(self.eval_data)
-            self.eval_data = self.eval_data.reshape((count, self.depth, self.width, self.height))
-            self.eval_data = self.eval_data.transpose((0, 2, 3, 1))
+            self.eval_data = np.array(self.eval_data)
 
             np.save(data_file, self.eval_data)
             np.save(index_file, self.eval_index)
