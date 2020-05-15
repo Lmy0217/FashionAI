@@ -1,5 +1,4 @@
 numpy
 requests
 matplotlib
-Pillow
 tqdm
