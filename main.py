@@ -4,8 +4,8 @@ import os.path
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
+from torch.utils.data import DataLoader
 import model as m
-from torch.autograd import Variable
 from dataset import FashionAI
 
 
@@ -43,8 +43,8 @@ if args.cuda:
 kwargs = {'num_workers': 1, 'pin_memory': True} if args.cuda else {}
 trainset = FashionAI('./', attribute=args.attribute, split=0.8, ci=args.ci, data_type='train', reset=False)
 testset = FashionAI('./', attribute=args.attribute, split=0.8, ci=args.ci, data_type='test', reset=trainset.reset)
-train_loader = torch.utils.data.DataLoader(trainset, batch_size=args.batch_size, shuffle=True, **kwargs)
-test_loader = torch.utils.data.DataLoader(testset, batch_size=args.test_batch_size, shuffle=True, **kwargs)
+train_loader = DataLoader(trainset, batch_size=args.batch_size, shuffle=True, **kwargs)
+test_loader = DataLoader(testset, batch_size=args.test_batch_size, shuffle=True, **kwargs)
 
 if args.ci:
     args.model = 'ci'
@@ -70,7 +70,6 @@ def train(epoch):
     for batch_idx, (data, target) in enumerate(train_loader):
         if args.cuda:
             data, target = data.cuda(), target.cuda()
-        data, target = Variable(data), Variable(target)
         optimizer.zero_grad()
         output = model(data)
         loss = F.nll_loss(output, target)
@@ -79,7 +78,7 @@ def train(epoch):
         if batch_idx % args.log_interval == 0:
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),
-                100. * batch_idx / len(train_loader), loss.data[0]))
+                100. * batch_idx / len(train_loader), loss.data.item()))
 
     if not os.path.exists(save_folder):
         os.makedirs(save_folder)
@@ -94,10 +93,9 @@ def test():
     for data, target in test_loader:
         if args.cuda:
             data, target = data.cuda(), target.cuda()
-        data, target = Variable(data, volatile=True), Variable(target)
         output = model(data)
-        test_loss += F.nll_loss(output, target, size_average=False).data[0] # sum up batch loss
-        pred = output.data.max(1, keepdim=True)[1] # get the index of the max log-probability
+        test_loss += F.nll_loss(output, target, size_average=False).data.item()  # sum up batch loss
+        pred = output.data.max(1, keepdim=True)[1]  # get the index of the max log-probability
         correct += pred.eq(target.data.view_as(pred)).cpu().sum()
 
     test_loss /= len(test_loader.dataset)
