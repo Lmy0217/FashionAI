@@ -18,13 +18,9 @@ try:
     import requests.get as urlopen
     requests_available = True
 except ImportError:
+    from urllib.request import urlopen
+    from urllib.parse import urlparse
     requests_available = False
-    if sys.version_info[0] == 2:
-        from urlparse import urlparse
-        from urllib2 import urlopen
-    else:
-        from urllib.request import urlopen
-        from urllib.parse import urlparse
 try:
     from tqdm import tqdm
 except ImportError:
